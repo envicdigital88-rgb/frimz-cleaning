@@ -1,5 +1,5 @@
 import React from 'react';
-import { Phone, MessageCircle, MapPin, Clock } from 'lucide-react';
+import { Phone, MessageCircle, MapPin, Clock, Mail } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const ContactSection = () => {
@@ -38,6 +38,7 @@ export const ContactSection = () => {
             <div className="space-y-6">
               {[
                 { icon: Phone, bg: 'bg-brand-100', text: 'text-brand-700', title: 'Phone', content: '+44 7570946109' },
+                { icon: Mail, bg: 'bg-blue-100', text: 'text-blue-600', title: 'Email', content: 'info@frimz.com' },
                 { icon: MessageCircle, bg: 'bg-green-100', text: 'text-green-600', title: 'WhatsApp', content: '+44 7570946109' },
                 { icon: MapPin, bg: 'bg-brand-100', text: 'text-brand-700', title: 'Location', content: 'Stratton, Swindon, United Kingdom' },
                 { icon: Clock, bg: 'bg-gold/20', text: 'text-gold-dark', title: 'Operating Hours', content: 'Always Open - 24/7 Service' }

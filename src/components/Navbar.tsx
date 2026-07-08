@@ -72,11 +72,18 @@ export const Navbar = () => {
             className="flex items-center gap-2"
             onClick={(e) => handleNavClick(e, '#')}
           >
-            <img 
-              src="/logo.png" 
-              alt="Frimz Cleaning Logo" 
-              className={`transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}
-            />
+            <div className={`relative transition-all duration-300 rounded-full ${
+              isScrolled 
+                ? 'bg-white border-2 border-gold shadow-lg p-2' 
+                : 'bg-white/95 border-2 border-gold shadow-xl p-2'
+            }`}>
+              {/* Logo */}
+              <img 
+                src="/logo.png" 
+                alt="Frimz Cleaning Logo" 
+                className={`transition-all duration-300 ${isScrolled ? 'h-14' : 'h-16'}`}
+              />
+            </div>
           </a>
 
           {/* Desktop Nav */}
