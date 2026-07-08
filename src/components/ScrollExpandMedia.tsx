@@ -397,6 +397,23 @@ const ScrollExpandMedia = ({
                   
                   {restOfTitle}
                 </motion.h2>
+                
+                {/* Text that appears after animation completes - highly visible */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ 
+                    opacity: mediaFullyExpanded ? 1 : 0,
+                    y: mediaFullyExpanded ? 0 : 20
+                  }}
+                  transition={{ 
+                    duration: 0.6,
+                    delay: 0.3
+                  }}
+                  className="mt-12 px-8 py-4 bg-brand-900/90 backdrop-blur-sm rounded-full border-2 border-gold shadow-2xl">
+                  <p className="text-gold font-bold text-xl md:text-2xl lg:text-3xl tracking-wide animate-pulse">
+                    Scroll to know more about us
+                  </p>
+                </motion.div>
               </div>
             </div>
 
