@@ -17,13 +17,17 @@ export const Navbar = () => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
     
-    // Dispatch custom event to bypass hero scroll lock
-    window.dispatchEvent(new CustomEvent('bypassHeroScroll'));
-    
     if (href === '#') {
+      // Dispatch event to collapse hero with animation
+      window.dispatchEvent(new CustomEvent('collapseHeroScroll'));
+      
+      // Scroll to top smoothly
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
+    
+    // Dispatch custom event to bypass hero scroll lock for other sections
+    window.dispatchEvent(new CustomEvent('bypassHeroScroll'));
     
     // Small delay to allow bypass to take effect
     setTimeout(() => {

@@ -7,11 +7,13 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="col-span-1 md:col-span-2">
             <div className="mb-4">
-              <img 
-                src="/logo.png" 
-                alt="Frimz Cleaning Logo" 
-                className="h-20 w-auto mb-4"
-              />
+              <div className="inline-block bg-white rounded-full border-2 border-gold shadow-lg p-2">
+                <img 
+                  src="/logo.png" 
+                  alt="Frimz Cleaning Logo" 
+                  className="h-16 w-auto"
+                />
+              </div>
             </div>
             <p className="text-slate-400 max-w-md mb-6">
               Professional cleaning services you can trust. We create fresh,

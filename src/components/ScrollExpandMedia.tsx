@@ -48,6 +48,14 @@ const ScrollExpandMedia = ({
       setAllowBypass(true);
     };
     
+    const handleCollapseScroll = () => {
+      // User clicked Home, trigger collapse animation
+      setMediaFullyExpanded(false);
+      setShowContent(false);
+      setScrollProgress(0);
+      setAllowBypass(false);
+    };
+    
     const handleHashChange = () => {
       const hash = window.location.hash;
       if (hash && hash !== '#') {
@@ -56,10 +64,12 @@ const ScrollExpandMedia = ({
     };
     
     window.addEventListener('bypassHeroScroll', handleBypassScroll);
+    window.addEventListener('collapseHeroScroll', handleCollapseScroll);
     window.addEventListener('hashchange', handleHashChange);
     
     return () => {
       window.removeEventListener('bypassHeroScroll', handleBypassScroll);
+      window.removeEventListener('collapseHeroScroll', handleCollapseScroll);
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, []);
