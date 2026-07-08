@@ -17,22 +17,28 @@ export const Navbar = () => {
     e.preventDefault();
     setIsMobileMenuOpen(false);
     
+    // Dispatch custom event to bypass hero scroll lock
+    window.dispatchEvent(new CustomEvent('bypassHeroScroll'));
+    
     if (href === '#') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     
-    const element = document.querySelector(href);
-    if (element) {
-      const navbarHeight = 80; // Adjust based on your navbar height
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - navbarHeight;
-      
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+    // Small delay to allow bypass to take effect
+    setTimeout(() => {
+      const element = document.querySelector(href);
+      if (element) {
+        const navbarHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - navbarHeight;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   const navLinks = [

@@ -29,14 +29,55 @@ const ScrollExpandMedia = ({
   const [mediaFullyExpanded, setMediaFullyExpanded] = useState<boolean>(false);
   const [touchStartY, setTouchStartY] = useState<number>(0);
   const [isMobileState, setIsMobileState] = useState<boolean>(false);
+  const [allowBypass, setAllowBypass] = useState<boolean>(false);
   const sectionRef = useRef<HTMLDivElement | null>(null);
+  
   useEffect(() => {
     setScrollProgress(0);
     setShowContent(false);
     setMediaFullyExpanded(false);
   }, [mediaType]);
+  
+  // Listen for hash changes (navigation clicks)
+  useEffect(() => {
+    const handleBypassScroll = () => {
+      // User clicked a navigation link, bypass the scroll animation
+      setMediaFullyExpanded(true);
+      setShowContent(true);
+      setScrollProgress(1);
+      setAllowBypass(true);
+    };
+    
+    const handleHashChange = () => {
+      const hash = window.location.hash;
+      if (hash && hash !== '#') {
+        handleBypassScroll();
+      }
+    };
+    
+    window.addEventListener('bypassHeroScroll', handleBypassScroll);
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('bypassHeroScroll', handleBypassScroll);
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+  
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      // Check if we're at the top of the page and scrolling up
+      if (window.scrollY <= 10 && e.deltaY < 0 && mediaFullyExpanded) {
+        e.preventDefault();
+        // Start collapsing animation
+        setMediaFullyExpanded(false);
+        setAllowBypass(false);
+        setScrollProgress(0.99); // Start near full to begin reverse animation
+        return;
+      }
+      
+      if (allowBypass) return; // Allow normal scrolling if bypassed and not at top
+      
       if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
         setMediaFullyExpanded(false);
         e.preventDefault();
@@ -51,6 +92,7 @@ const ScrollExpandMedia = ({
         if (newProgress >= 1) {
           setMediaFullyExpanded(true);
           setShowContent(true);
+          setAllowBypass(true);
         } else if (newProgress < 0.75) {
           setShowContent(false);
         }
@@ -63,6 +105,19 @@ const ScrollExpandMedia = ({
       if (!touchStartY) return;
       const touchY = e.touches[0].clientY;
       const deltaY = touchStartY - touchY;
+      
+      // Check if we're at the top and pulling down
+      if (window.scrollY <= 10 && deltaY < -20 && mediaFullyExpanded) {
+        e.preventDefault();
+        setMediaFullyExpanded(false);
+        setAllowBypass(false);
+        setScrollProgress(0.99);
+        setTouchStartY(touchY);
+        return;
+      }
+      
+      if (allowBypass) return; // Allow normal scrolling if bypassed and not at top
+      
       if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
         setMediaFullyExpanded(false);
         e.preventDefault();
@@ -78,6 +133,7 @@ const ScrollExpandMedia = ({
         if (newProgress >= 1) {
           setMediaFullyExpanded(true);
           setShowContent(true);
+          setAllowBypass(true);
         } else if (newProgress < 0.75) {
           setShowContent(false);
         }
@@ -88,8 +144,16 @@ const ScrollExpandMedia = ({
       setTouchStartY(0);
     };
     const handleScroll = (): void => {
-      if (!mediaFullyExpanded) {
+      if (!mediaFullyExpanded && !allowBypass) {
         window.scrollTo(0, 0);
+      }
+      
+      // If user scrolled down past the hero, set bypass
+      if (window.scrollY > 100 && !allowBypass) {
+        setMediaFullyExpanded(true);
+        setShowContent(true);
+        setScrollProgress(1);
+        setAllowBypass(true);
       }
     };
     window.addEventListener('wheel', handleWheel as unknown as EventListener, {
@@ -127,7 +191,7 @@ const ScrollExpandMedia = ({
       );
       window.removeEventListener('touchend', handleTouchEnd as EventListener);
     };
-  }, [scrollProgress, mediaFullyExpanded, touchStartY]);
+  }, [scrollProgress, mediaFullyExpanded, touchStartY, allowBypass]);
   useEffect(() => {
     const checkIfMobile = (): void => {
       setIsMobileState(window.innerWidth < 768);
